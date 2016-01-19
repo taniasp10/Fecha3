@@ -383,7 +383,7 @@ public class Fecha {
     
         /////////////////////2ºMETODO////////////////////////
         public int formatoFecha(){
-            
+            //se va a usar un metodo visualizarletra
     
     
         }
