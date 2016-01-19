@@ -9,21 +9,23 @@ package fecha;
  */
 public class Fecha {
     /**
-     * dia del mes
+     * nºdia del mes
      */
     private int dia;
     /**
-     * mes
+     * nºmes
      */
     private int mes;
     /**
-     * año
+     * nºaño
      */
     private int anno;
-
+    
+    //SE PUEDE PONER STATIC: private static int []diasMes={31,28,31,30,31,30,31,31,30,31,30,31};
+    
     /**
      * Constructor que inicializa los valores por defecto
-     */
+     */ 
     public Fecha() {
     }
     
@@ -186,8 +188,7 @@ public class Fecha {
         int []diasMes={31,28,31,30,31,30,31,31,30,31,30,31};
         diasMes[1]=bisiesto();//usa el metodo bisiesto para comprobar si el año es bisiesto
         for(int m=0; m<mes-1; m++){
-            orden=orden+diasMes[m];//suma el orden mas el valor q ocupa la posicion de ese mes
-            orden=orden+dia;    
+            orden=orden+diasMes[m];//suma el orden mas el valor q ocupa la posicion de ese mes      
         }
         /**
           tambien se puede poner el for asi:
@@ -196,8 +197,33 @@ public class Fecha {
             orden=orden+dia;    
              }
          */
-        return dia;
+        orden=orden+dia; 
+        return orden;
     }
+    
+    /**
+     *  Metodo que calcula los dias q han pasado desde el inicio del año, en una determinada fecha.
+     * @param fecha doy los datos de la fecha
+     * @return devuelve el numero de dias transcurridos
+     */
+    public int calcularNumeroDeOrden(Fecha fecha){
+        int orden=0;
+        int []diasMes={31,28,31,30,31,30,31,31,30,31,30,31};
+        diasMes[1]=bisiesto();//usa el metodo bisiesto para comprobar si el año es bisiesto
+        for(int m=0; m<mes-1; m++){
+            orden=orden+diasMes[m];//suma el orden mas el valor q ocupa la posicion de ese mes      
+        }
+        /**
+          tambien se puede poner el for asi:
+          for(int m=1; m<mes; m++){
+            orden=orden+diasMes[m-1];
+            orden=orden+dia;    
+             }
+         */
+        orden=orden+dia; 
+        return orden;
+    }
+    
     /*
     public static void cambiar(int[] diasMes){//lo cambia en los dos objetos
         diasMes[1]=88888;
@@ -213,4 +239,175 @@ public class Fecha {
         dias=diasAño()-calcularNumeroDeOrden();
         return dias;
     }
+    
+    /**
+     * Metodo que averigua los dias q quedan para q acabe el año
+     * @param a doy el año
+     * @return devuelve los dias q quedan hasta el fin del año
+     */
+    public int diasFinAño(int a){
+        int dias;
+        dias=diasAño()-calcularNumeroDeOrden();
+        return dias;
+    }
+    
+    /**
+     * Metodo para comparar dos fechas
+     * @param fecha la segunda fecha para compararla
+     * @return 0 si es igual, 1 si es menor y 2 si es mayor
+     */
+    public int compararFechas(Fecha fecha){
+        int resultado;
+        if(anno<fecha.getAnno())
+        {//año menor
+            resultado=1;
+        }//año menor
+        else{//año no menor
+            if(this.anno>fecha.getAnno())
+            {//año mayor
+                resultado=2;
+            }//año mayor
+            else{//mes
+                if(mes<fecha.getMes())
+                {//mes menor
+                    resultado=1;
+                }//mes menor
+                else{//mes no menor
+                    if(mes>fecha.getMes())
+                    {//mes mayor
+                        resultado=2;
+                    }//mes mayor
+                    else{//dias
+                        if(dia<fecha.getDia())
+                        {//dia menor
+                            resultado=1;
+                        }//dia menor
+                        else{//dia no menor
+                            if(dia>fecha.getDia())
+                            {//dia mayor
+                                resultado=2;
+                            }//dia mayor
+                            else{//igual
+                                resultado=0;
+                            }//igual
+                        }//dia no menor
+                    }//dias
+                }//mes no menor
+            }//mes
+        }//año no menor
+        return resultado;
+    }
+    /**
+     * Metodo para averiguar el nº de dias que pasan de una fecha a otra
+     * @param f2 doy los datos de la fecha2
+     * @param m doy el mes
+     */
+    public int calcularDias(Fecha f2){
+        int dias = 0;
+        int []diasMes={31,28,31,30,31,30,31,31,30,31,30,31};
+        diasMes[1]=bisiesto();//usa el metodo bisiesto para comprobar si el año es bisiesto
+        
+        if(anno==f2.getAnno())
+        {//si el año de las dos fechas es igual
+            if(mes==f2.getMes())
+            {//si el mes de las dos fechas es igual
+                dias = f2.getDia()-dia;
+            }//si el mes de las dos fechas es igual
+            else
+            {//si el mes de las dos fechas no coincide
+                dias=diasMes[mes-1]-dia;//resta el nºde dias de ese mes con el dia dado en la fecha
+                mes=mes;
+                while(mes<f2.getMes()-1)
+                {//mientras el mes de la fecha1 sea menor que el mes de la fecha2
+                    dias=dias+diasMes[mes];
+                    mes++;
+                }
+                /*
+                tambien se puede usar el for:
+                for(m=mes;m<f2.getMes()-1;m++;){
+                    dias=dias+diasMes[m];
+                }
+                */
+                dias=dias+f2.getMes();    
+            }//si el mes de las dos fechas no coincide
+        }//si el año de las dos fechas es igual
+        else
+        {//si el año de las dos fechas es distinto
+            if(anno!=f2.getAnno()){
+                anno=anno+1;
+                int diasTrans=0;
+                while(anno<f2.getAnno()){
+                    diasTrans=diasTrans+diasAño(anno);
+                    anno++;
+                }
+                diasTrans=diasTrans+diasFinAño(anno)+calcularNumeroDeOrden(f2);
+                dias=diasTrans;
+            }
+        }//si el año de las dos fechas es distinto
+        return dias;
+    }
+    
+    /*ejercicio 5:
+        /////////////////////1ºMETODO//////////////////////////
+        public void calcularNuevaFecha(int d, int m, int a){
+            InputStreamReader flujo=new InputStreamReader(System.in);
+            BufferedReader teclado=new BufferedReader(flujo);
+            
+            int []diasMes={31,28,31,30,31,30,31,31,30,31,30,31};
+            diasMes[1]=bisiesto();
+    
+            int diasVencimiento;
+            System.out.println("Dias de vencimiento: ");
+            diasVencimiento=Integer.parseInt(teclado.readLine));
+            
+            int nDia;//nuevo dia
+            int nMes;//nuevo mes
+            int nAño;//nuevo año
+    
+            nDia=d+diasVencimiento;
+            if(nDia>diasMes(m-1)){
+                nDia=nDia-diasMes(m-1);
+                nMes=m+1;
+                if(nMes>diasMes.length()){
+                    nAño=a+1;
+                }
+                else{
+                    nAño=a;
+                }
+            }
+            else{
+                nMes=m;
+                nAño=a;
+            }
+        }
+    
+        /////////////////////2ºMETODO////////////////////////
+        public int formatoFecha(){
+            
+    
+    
+        }
+    
+    
+        //////////////////3ºMETODO///////////////////////
+        public void calcularFecha(int a){
+            int nDia;
+            int nMes;
+            int nAño;
+    
+            int []diasMes={31,28,31,30,31,30,31,31,30,31,30,31};
+            diasMes[1]=bisiesto();
+    
+            int d=0;
+            while(calcularNumeroDeOrden()>diasMes[d]){//mientras los dias trancurridos sean mayores q los dias del primer mes
+                nDia=calcularNumeroDeOrden()-diasMes[d];
+                d++;
+            }
+            
+            nMes=d+1;
+            nAño=a;
+        }
+  
+    */
+            
 }
