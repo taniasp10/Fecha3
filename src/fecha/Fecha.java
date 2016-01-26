@@ -435,5 +435,9 @@ public class Fecha {
 
         System.out.println("Fecha " + nDia + "\t" + (mes+1) + "\t" + año);
     }
+    //control de versiones
+    public void metodo(){
+        System.out.println("Version 1.1");
+    }
 
 }
