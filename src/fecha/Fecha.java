@@ -437,7 +437,7 @@ public class Fecha {
     }
     //control de versiones
     public void metodo(){
-        System.out.println("Version 1.1");
+        System.out.println("Rama primera");
     }
 
 }
